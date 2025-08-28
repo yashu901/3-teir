@@ -1,0 +1,134 @@
+<div class="teams-wrap">
+    <header class="teams-header">
+        <h1>Teams</h1>
+
+        <div class="header-actions">
+            <input type="search" placeholder="Search teams..." [(ngModel)]="searchText" (input)="applyFilter()"
+                class="search" />
+            <button class="btn primary" (click)="showGenerateForm = !showGenerateForm">
+                {{ showGenerateForm ? 'Close' : '➕ Generate Team' }}
+            </button>
+        </div>
+    </header>
+
+    <!-- Generate Form -->
+    <section *ngIf="showGenerateForm" class="generate-form card">
+        <h2>Create / Generate Team</h2>
+        <form (ngSubmit)="generateTeam()" #gform="ngForm" class="gridform">
+            <label>
+                Team name (optional)
+                <input type="text" [(ngModel)]="teamForm.name" name="name" maxlength="80" />
+            </label>
+
+            <label>
+                Team size
+                <input type="number" [(ngModel)]="teamForm.team_size" name="team_size" min="5" max="11" required />
+            </label>
+
+            <label>
+                Batsmen
+                <input type="number" [(ngModel)]="teamForm.batsmen" name="batsmen" min="0" max="11" required />
+            </label>
+
+            <label>
+                Bowlers
+                <input type="number" [(ngModel)]="teamForm.bowlers" name="bowlers" min="0" max="11" required />
+            </label>
+
+            <label>
+                Keepers
+                <input type="number" [(ngModel)]="teamForm.keepers" name="keepers" min="0" max="11" required />
+            </label>
+
+            <label>
+                Allrounders
+                <input type="number" [(ngModel)]="teamForm.allrounders" name="allrounders" min="0" max="11" required />
+            </label>
+
+            <div class="form-actions">
+                <button type="submit" class="btn primary" [disabled]="generating">Generate</button>
+                <button type="button" class="btn" (click)="showGenerateForm=false; resetForm()">Cancel</button>
+            </div>
+            <p class="hint">Composition sum must equal team size. Server will validate too.</p>
+        </form>
+    </section>
+
+    <!-- Error / Loading -->
+    <div *ngIf="loading" class="center muted">Loading teams…</div>
+    <div *ngIf="error" class="center error">{{ error }}</div>
+
+    <!-- Teams List -->
+    <section *ngIf="!loading && filteredTeams.length > 0" class="list card">
+        <table class="teams-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Avg Batting</th>
+                    <th>Avg Bowling</th>
+                    <th>Avg Fielding</th>
+                    <th>Players</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let t of filteredTeams">
+                    <tr>
+                        <td class="team-name">{{ t.name }}</td>
+                        <td>{{ t.size }}</td>
+                        <td>{{ t.stats?.avgBatting ?? '-' }}</td>
+                        <td>{{ t.stats?.avgBowling ?? '-' }}</td>
+                        <td>{{ t.stats?.avgFielding ?? '-' }}</td>
+                        <td class="players-cell">
+                            {{ (t.players ?? []).slice(0,3).join(', ') }}<span *ngIf="(t.players ?? []).length > 3">,
+                                ...</span>
+                        </td>
+                        <td class="actions-col">
+                            <button class="btn small" (click)="viewTeam(getId(t))">
+                                {{ expandedTeamId === getId(t) ? 'Collapse' : 'View' }}
+                            </button>
+                            <button class="btn danger small" (click)="deleteTeam(getId(t))">Delete</button>
+                        </td>
+                    </tr>
+
+                    <!-- expanded row for details -->
+                    <tr class="detail-row" *ngIf="expandedTeamId && expandedTeamId === getId(t)">
+                        <td colspan="7">
+                            <div class="detail-panel">
+                                <div *ngIf="detailLoading" class="center">Loading details…</div>
+                                <div *ngIf="!detailLoading && teamDetail">
+                                    <h3>{{ teamDetail.name }} — Players ({{ teamDetail.players?.length ?? 0 }})</h3>
+                                    <div class="stats">
+                                        <div><strong>Avg Batting:</strong> {{ teamDetail.stats?.avgBatting ?? '-' }}
+                                        </div>
+                                        <div><strong>Avg Bowling:</strong> {{ teamDetail.stats?.avgBowling ?? '-' }}
+                                        </div>
+                                        <div><strong>Avg Fielding:</strong> {{ teamDetail.stats?.avgFielding ?? '-' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="players-grid">
+                                        <div class="player-card" *ngFor="let p of teamDetail.players ?? []">
+                                            <div class="p-name">{{ p.name }}</div>
+                                            <div class="p-meta">Age: {{ p.age ?? '-' }}</div>
+                                            <div class="p-stats">
+                                                <span>Bat: {{ p.batting ?? '-' }}</span>
+                                                <span> Bowl: {{ p.bowling ?? '-' }}</span>
+                                                <span> Field: {{ p.fielding ?? '-' }}</span>
+                                                <span> WK: {{ p.wicketKeeping ?? '-' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </section>
+
+    <div *ngIf="!loading && filteredTeams.length === 0" class="center muted">
+        No teams yet. Generate one!
+    </div>
+</div>

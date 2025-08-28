@@ -1,0 +1,20 @@
+<div class="layout-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Cricket Management</div>
+
+        <ul class="nav-links">
+            <li><a routerLink="/layout/teams">Teams</a></li>
+            <li><a routerLink="/layout/players">Players</a></li>
+        </ul>
+
+        <div class="user-info">
+            <span class="username">Hello, {{ username }}</span>
+            <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
+    </nav>
+    <!-- Page content -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

@@ -1,0 +1,104 @@
+<div class="players-container">
+    <h2 class="title">Players Management</h2>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="loading">Loading players...</div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <!-- Toggle Add Player -->
+    <button (click)="showAddForm = !showAddForm" *ngIf="!showAddForm" class="add-btn">➕ Add Player</button>
+
+    <!-- Add Player Form -->
+    <div *ngIf="showAddForm" class="form-container">
+        <h3>Add New Player</h3>
+        <form (ngSubmit)="addPlayer()" #playerForm="ngForm">
+            <input type="text" placeholder="Name" [(ngModel)]="newPlayer.name" name="name" required minlength="2" />
+            <input type="number" placeholder="Age" [(ngModel)]="newPlayer.age" name="age" required min="10" max="60" />
+            <input type="number" placeholder="Batting" [(ngModel)]="newPlayer.batting" name="batting" required min="0"
+                max="100" />
+            <input type="number" placeholder="Bowling" [(ngModel)]="newPlayer.bowling" name="bowling" required min="0"
+                max="100" />
+            <input type="number" placeholder="Fielding" [(ngModel)]="newPlayer.fielding" name="fielding" required
+                min="0" max="100" />
+            <input type="number" placeholder="Wicket Keeping" [(ngModel)]="newPlayer.wicketKeeping" name="wicketKeeping"
+                required min="0" max="100" />
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="!playerForm.form.valid">✅ Save</button>
+                <button type="button" (click)="showAddForm=false; resetForm()">❌ Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-container">
+        <h3>Filters</h3>
+        <input type="text" placeholder="Search by name" [(ngModel)]="searchName" (input)="applyFilters()" />
+        <input type="number" placeholder="Min Age" [(ngModel)]="minAge" (input)="applyFilters()" />
+        <input type="number" placeholder="Max Age" [(ngModel)]="maxAge" (input)="applyFilters()" />
+
+        <label><input type="checkbox" [(ngModel)]="skillFilters.batting50" (change)="applyFilters()"> Batting ≥
+            50</label>
+        <label><input type="checkbox" [(ngModel)]="skillFilters.bowling50" (change)="applyFilters()"> Bowling ≥
+            50</label>
+        <label><input type="checkbox" [(ngModel)]="skillFilters.fielding50" (change)="applyFilters()"> Fielding ≥
+            50</label>
+        <label><input type="checkbox" [(ngModel)]="skillFilters.wicketKeeping50" (change)="applyFilters()"> Wicket
+            Keeping ≥ 50</label>
+
+        <!-- Sorting -->
+        <select [(ngModel)]="sortField" (change)="applyFilters()">
+            <option value="">-- Sort By --</option>
+            <option value="name">Name</option>
+            <option value="age">Age</option>
+            <option value="batting">Batting</option>
+            <option value="bowling">Bowling</option>
+            <option value="fielding">Fielding</option>
+            <option value="wicketKeeping">Wicket Keeping</option>
+        </select>
+        <button (click)="sortAsc=!sortAsc; applyFilters()">⬆⬇</button>
+    </div>
+
+    <!-- No Players -->
+    <div *ngIf="!loading && filteredPlayers.length === 0" class="no-players">
+        🚫 No players available.
+    </div>
+
+    <!-- Players Table -->
+    <div *ngIf="!loading && pagedPlayers.length > 0" class="table-wrapper">
+        <table class="players-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Batting</th>
+                    <th>Bowling</th>
+                    <th>Fielding</th>
+                    <th>Wicket Keeping</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let player of pagedPlayers">
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.batting }}</td>
+                    <td>{{ player.bowling }}</td>
+                    <td>{{ player.fielding }}</td>
+                    <td>{{ player.wicketKeeping }}</td>
+                    <td><button class="delete-btn" (click)="deletePlayer(getId(player))">🗑 Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading && filteredPlayers.length > pageSize">
+        <button (click)="prevPage()" [disabled]="currentPage===1">⬅ Prev</button>
+        <span>Page {{currentPage}} / {{ Math.ceil(filteredPlayers.length/pageSize) }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage===Math.ceil(filteredPlayers.length/pageSize)">Next
+            ➡</button>
+    </div>
+</div>

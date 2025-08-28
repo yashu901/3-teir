@@ -1,0 +1,160 @@
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Container ===== */
+.login-container {
+  display: flex;
+  justify-content: center;
+  background-size: cover;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url('https://www.sportsboom.com/_next/image?url=https%3A%2F%2Fassets.sportsboom.com%2FEden_Gardens_Kolkata_Stadium_1967d3c450.jpg&w=3840&q=75');
+  padding: 20px;
+}
+
+/* ===== Card ===== */
+.login-card {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Decorative cricket ball (floating) */
+.login-card::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle at 30% 30%, #ff4500, #b22222);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(178, 34, 34, 0.6);
+}
+
+/* ===== Titles ===== */
+.login-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2e8b57;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 1.8rem;
+}
+
+/* ===== Form Labels ===== */
+form label {
+  display: block;
+  text-align: left;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: #2f4f4f;
+}
+
+/* ===== Inputs ===== */
+form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 6px;
+  border: 2px solid #228b22; /* green pitch border */
+  border-radius: 10px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+form input:focus {
+  border-color: #ff4500; /* red ball focus */
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
+}
+
+/* ===== Error Messages ===== */
+.error {
+  font-size: 0.82rem;
+  color: #d32f2f;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* ===== Buttons ===== */
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #228b22, #006400);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-top: 10px;
+}
+
+button:disabled {
+  background: #9acd32;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background: linear-gradient(90deg, #ff4500, #b22222); /* red ball hover */
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 15px rgba(178, 34, 34, 0.3);
+}
+
+/* ===== Signup Text ===== */
+.signup-text {
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.signup-text a {
+  color: #ff4500;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem 1.8rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  form input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
