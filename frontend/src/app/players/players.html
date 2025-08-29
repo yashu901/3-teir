@@ -8,7 +8,9 @@
     <div *ngIf="error" class="error">{{ error }}</div>
 
     <!-- Toggle Add Player -->
-    <button (click)="showAddForm = !showAddForm" *ngIf="!showAddForm" class="add-btn">➕ Add Player</button>
+    <button (click)="showAddForm = !showAddForm" *ngIf="!showAddForm && !editingPlayer" class="add-btn">
+        ➕ Add Player
+    </button>
 
     <!-- Add Player Form -->
     <div *ngIf="showAddForm" class="form-container">
@@ -32,8 +34,26 @@
         </form>
     </div>
 
+    <!-- Edit Player Form -->
+    <div *ngIf="editingPlayer" class="form-container">
+        <h3>Edit Player</h3>
+        <form (ngSubmit)="updatePlayer()" #editForm="ngForm">
+            <input type="text" [(ngModel)]="editingPlayer.name" name="editName" required minlength="2" />
+            <input type="number" [(ngModel)]="editingPlayer.age" name="editAge" required min="10" max="60" />
+            <input type="number" [(ngModel)]="editingPlayer.batting" name="editBatting" required min="0" max="100" />
+            <input type="number" [(ngModel)]="editingPlayer.bowling" name="editBowling" required min="0" max="100" />
+            <input type="number" [(ngModel)]="editingPlayer.fielding" name="editFielding" required min="0" max="100" />
+            <input type="number" [(ngModel)]="editingPlayer.wicketKeeping" name="editWK" required min="0" max="100" />
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="!editForm.form.valid">💾 Update</button>
+                <button type="button" (click)="cancelEdit()">❌ Cancel</button>
+            </div>
+        </form>
+    </div>
+
     <!-- Filters -->
-    <div class="filter-container">
+    <div class="filter-container" *ngIf="!editingPlayer">
         <h3>Filters</h3>
         <input type="text" placeholder="Search by name" [(ngModel)]="searchName" (input)="applyFilters()" />
         <input type="number" placeholder="Min Age" [(ngModel)]="minAge" (input)="applyFilters()" />
@@ -67,7 +87,7 @@
     </div>
 
     <!-- Players Table -->
-    <div *ngIf="!loading && pagedPlayers.length > 0" class="table-wrapper">
+    <div *ngIf="!loading && pagedPlayers.length > 0 && !editingPlayer" class="table-wrapper">
         <table class="players-table">
             <thead>
                 <tr>
@@ -88,14 +108,17 @@
                     <td>{{ player.bowling }}</td>
                     <td>{{ player.fielding }}</td>
                     <td>{{ player.wicketKeeping }}</td>
-                    <td><button class="delete-btn" (click)="deletePlayer(getId(player))">🗑 Delete</button></td>
+                    <td>
+                        <button class="edit-btn" (click)="startEdit(player)">✏ Edit</button>
+                        <button class="delete-btn" (click)="deletePlayer(getId(player))">🗑 Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <!-- Pagination -->
-    <div class="pagination" *ngIf="!loading && filteredPlayers.length > pageSize">
+    <div class="pagination" *ngIf="!loading && filteredPlayers.length > pageSize && !editingPlayer">
         <button (click)="prevPage()" [disabled]="currentPage===1">⬅ Prev</button>
         <span>Page {{currentPage}} / {{ Math.ceil(filteredPlayers.length/pageSize) }}</span>
         <button (click)="nextPage()" [disabled]="currentPage===Math.ceil(filteredPlayers.length/pageSize)">Next

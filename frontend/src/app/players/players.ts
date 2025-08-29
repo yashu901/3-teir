@@ -23,7 +23,6 @@ export interface Player {
   templateUrl: './players.html',
   styleUrl: './players.css'
 })
-
 export class Players implements OnInit, OnDestroy {
   players: Player[] = [];
   filteredPlayers: Player[] = [];
@@ -35,6 +34,8 @@ export class Players implements OnInit, OnDestroy {
 
   showAddForm = false;
   newPlayer: Partial<Player> = this.getEmptyPlayer();
+
+  editingPlayer: Player | null = null;
 
   // filters
   searchName: string = '';
@@ -61,8 +62,6 @@ export class Players implements OnInit, OnDestroy {
   private http = inject(HttpClient);
   private navSub: Subscription | null = null;
   Math = Math;
-
-  constructor() { }
 
   ngOnInit(): void {
     this.fetchPlayers();
@@ -143,6 +142,38 @@ export class Players implements OnInit, OnDestroy {
     });
   }
 
+  startEdit(player: Player) {
+    this.editingPlayer = { ...player }; // copy
+  }
+
+  cancelEdit() {
+    this.editingPlayer = null;
+  }
+
+  updatePlayer() {
+    if (!this.editingPlayer) return;
+
+    const id = this.getId(this.editingPlayer);
+    if (!id) {
+      alert("Invalid player ID");
+      return;
+    }
+
+    this.http.put<any>(`${this.API_URL}/${id}`, this.editingPlayer).subscribe({
+      next: (raw) => {
+        const updated = this.normalize(raw);
+        this.players = this.players.map(p => this.getId(p) === id ? updated : p);
+        this.applyFilters();
+        this.editingPlayer = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('[players] update error', err);
+        alert("Failed to update player. See console.");
+      }
+    });
+  }
+
   getId(player: Player): string | undefined {
     if (player.id) return player.id;
     if (typeof player._id === 'string') return player._id;
@@ -208,7 +239,6 @@ export class Players implements OnInit, OnDestroy {
         return 0;
       });
     }
-
 
     this.filteredPlayers = list;
     this.setPage(1);

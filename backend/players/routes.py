@@ -21,12 +21,12 @@ async def get_player(player_id: str):
         raise HTTPException(status_code=404, detail="Player not found")
     return player
 
-# @router.put("/{player_id}", response_model=PlayerOut)
-# async def put_player(player_id: str, data: PlayerIn):
-#     updated = await svc.update_player(player_id, PlayerUpdate(**data.model_dump()), replace=True)
-#     if not updated:
-#         raise HTTPException(status_code=404, detail="Player not found")
-#     return updated
+@router.put("/{player_id}", response_model=PlayerOut)
+async def put_player(player_id: str, data: PlayerIn):
+    updated = await svc.update_player(player_id, PlayerUpdate(**data.model_dump()), replace=True)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Player not found")
+    return updated
 
 @router.delete("/{player_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_player(player_id: str):

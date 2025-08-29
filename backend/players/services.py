@@ -30,18 +30,18 @@ async def get_player(player_id: str) -> Optional[PlayerOut]:
     doc = await COLL.find_one({"_id": ObjectId(player_id)})
     return _to_player_out(doc) if doc else None
 
-# async def update_player(player_id: str, updates: PlayerUpdate, *, replace: bool = False) -> Optional[PlayerOut]:
-#     if replace:
-#         # full replace (PUT): verify all required fields present via PlayerIn
-#         new_doc = PlayerIn(**updates.model_dump(exclude_unset=False)).model_dump()
-#         await COLL.replace_one({"_id": ObjectId(player_id)}, new_doc)
-#     else:
-#         patch = {k: v for k, v in updates.model_dump(exclude_unset=True).items()}
-#         if not patch:
-#             return await get_player(player_id)  # nothing to update
-#         await COLL.update_one({"_id": ObjectId(player_id)}, {"$set": patch})
-#     doc = await COLL.find_one({"_id": ObjectId(player_id)})
-#     return _to_player_out(doc) if doc else None
+async def update_player(player_id: str, updates: PlayerUpdate, *, replace: bool = False) -> Optional[PlayerOut]:
+    if replace:
+        # full replace (PUT): verify all required fields present via PlayerIn
+        new_doc = PlayerIn(**updates.model_dump(exclude_unset=False)).model_dump()
+        await COLL.replace_one({"_id": ObjectId(player_id)}, new_doc)
+    else:
+        patch = {k: v for k, v in updates.model_dump(exclude_unset=True).items()}
+        if not patch:
+            return await get_player(player_id)  # nothing to update
+        await COLL.update_one({"_id": ObjectId(player_id)}, {"$set": patch})
+    doc = await COLL.find_one({"_id": ObjectId(player_id)})
+    return _to_player_out(doc) if doc else None
 
 async def delete_player(player_id: str) -> bool:
     res = await COLL.delete_one({"_id": ObjectId(player_id)})
