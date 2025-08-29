@@ -1,4 +1,4 @@
-version: "3.9"
+
 services:
   backend:
     build: ./backend
@@ -6,8 +6,12 @@ services:
     restart: always
     env_file:
       - ./backend/.env
+    depends_on:
+      - db
     ports:
       - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://db:27017/cricketdb
 
   frontend:
     build: ./frontend
@@ -16,4 +20,16 @@ services:
     depends_on:
       - backend
     ports:
-      - "4200:80"
+      - "4200:4000"
+
+  db:
+    image: mongo:6
+    container_name: cricket-db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
