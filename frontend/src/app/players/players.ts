@@ -23,6 +23,7 @@ export interface Player {
   templateUrl: './players.html',
   styleUrl: './players.css'
 })
+
 export class Players implements OnInit, OnDestroy {
   players: Player[] = [];
   filteredPlayers: Player[] = [];

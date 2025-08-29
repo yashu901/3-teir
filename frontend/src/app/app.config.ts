@@ -10,13 +10,14 @@ import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // ❌ REMOVE this line: provideServerRendering(),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
     // Toastr providers
-    provideAnimations(), // Required for ngx-toastr
+    provideAnimations(),
     provideToastr({
       positionClass: 'toast-top-right',
       timeOut: 3000,

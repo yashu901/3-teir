@@ -26,7 +26,7 @@ export class Login {
       next: (res) => {
         this.toaser.success('Login successful!');
         this.router.navigate(['/layout/teams'])
-        console.log("yes");
+        this.auth.setToken(res.access_token)
       },
       error: (err) => {
         this.toaser.error('Login failed');

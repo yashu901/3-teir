@@ -1,0 +1,12 @@
+# Node dependencies and build artifacts
+node_modules
+dist
+.angular
+
+# Git and IDE folders
+.git
+.vscode
+
+# Log files
+*.log
+npm-debug.log*

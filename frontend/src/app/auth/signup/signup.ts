@@ -23,7 +23,7 @@ export class Signup {
     const data = { "username": this.username, "email": this.email, "password": this.password }
     this.auth.signup(data).subscribe({
       next: (res) => {
-        console.log("yes");
+        this.auth.setToken(res.access_token)
         this.router.navigate(['/layout/players']);
       },
       error: (err) => {

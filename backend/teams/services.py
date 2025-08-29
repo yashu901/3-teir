@@ -102,7 +102,7 @@ async def generate_team(req: TeamCreateRequest) -> TeamOut:
         id=str(saved["_id"]),
         name=saved["name"],
         size=saved["size"],
-        players=player_names,  # ✅ only names in response
+        players=player_names, 
         stats=TeamStats(**saved["stats"]),
     )
 
@@ -183,7 +183,7 @@ async def list_teams() -> List[TeamOut]:
                 id=str(d["_id"]),
                 name=d["name"],
                 size=d["size"],
-                players=[p["name"] for p in d["players"]],  # ✅ only names
+                players=[p["name"] for p in d["players"]],
                 stats=TeamStats(**d["stats"]),
             )
         )
