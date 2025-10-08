@@ -9,11 +9,11 @@ export class Auth {
   http = inject(HttpClient);
 
   login(s: any): Observable<any> {
-    return this.http.post("http://127.0.0.1:8000/login", s);
+    return this.http.post("http://16.171.58.156:8000/login", s);
   }
 
   signup(s: any): Observable<any> {
-    return this.http.post("http://127.0.0.1:8000/signup", s);
+    return this.http.post("http://16.171.58.156:8000/signup", s);
   }
 
   setToken(token: string) {
