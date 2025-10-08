@@ -55,5 +55,6 @@ jobs:
             sudo docker-compose pull
             echo "Restarting containers..."
             sudo docker-compose up -d --remove-orphans
-            echo "Cleaning old images..."
+            echo "Cleaning up..."
             sudo docker image prune -f
+
